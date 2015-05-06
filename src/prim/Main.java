@@ -1,3 +1,10 @@
+/*
+ * Universidade Estadual de Feira de Santana
+ * Análise e Projeto de Algoritmos - 2015.1
+ * Aluna: Tayane Leite Cerqueira
+ * Trabalho I - Algoritmo de Prim
+ */
+
 package prim;
 
 import java.io.BufferedReader;
@@ -10,8 +17,12 @@ public class Main {
 
 	public static void main(String[] args) throws IOException {
 		
+		//Leitura do arquivo de texto contendo a matriz e inicia a classe que executará o algorito de prim
+		
 		try {
-			BufferedReader dados = new BufferedReader(new FileReader("matriz.txt"));
+			
+			//Altere o nome do arquivo se necessário aqui
+			BufferedReader dados = new BufferedReader(new FileReader("matriz2.txt"));
 			
 			System.out.println("Lendo arquivo da matriz de adjacência... ");
 			int quant;
@@ -36,7 +47,6 @@ public class Main {
 			   while (token.hasMoreTokens()) {
 					
 					String peso = new String(token.nextToken());
-					//System.out.println("Peso: " + Integer.parseInt(peso) + " i=" + i + " | j=" + j);
 					matriz[i][j] = Integer.parseInt(peso);
 					
 					j++;
@@ -58,7 +68,7 @@ public class Main {
 			}
 			
 			Prim algoritmoPrim = new Prim(quant, matriz);
-			algoritmoPrim.init();
+			algoritmoPrim.init(); //Inicia a execução do algoritmo de prim
 			
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

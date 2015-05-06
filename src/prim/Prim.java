@@ -10,6 +10,7 @@ public class Prim {
 	int quant_vertices;
 	public static final int INFINITO = Integer.MAX_VALUE;
 	List<Integer> vert_visitados;
+	private Scanner scan;
 	
 	public Prim(int quant, int matriz[][]){
 		this.quant_vertices = quant;
@@ -26,15 +27,18 @@ public class Prim {
 		int v2 = 0;
 		
 		//Pego o primeiro vértice e vejo qual o outro vértice com quem ele forma uma aresta de menor peso
-		
-		Scanner scan = new Scanner(System.in);
+		scan = new Scanner(System.in);
 		System.out.println("Insira o número do vértice por onde deseja iniciar: ");
         int verticeInicial = scan.nextInt();
+        
         while(verticeInicial > quant_vertices || verticeInicial < 0){
+        	
         	System.out.println("Vértice inválido! Insira um valor de 0 a " + (quant_vertices - 1));
         	System.out.println("Insira o número do vértice por onde deseja iniciar: ");
             verticeInicial = scan.nextInt();
+            
         }
+        
         v1 = verticeInicial;
 		for(int i = 1; i < quant_vertices; i++){
 			if(matriz_adjacencia[v1][i] > 0 && matriz_adjacencia[v1][i] < peso){
@@ -45,7 +49,7 @@ public class Prim {
 		
 		//imprimeMatrizAdjacencia();
 		System.out.println("Aresta escolhida: [" + v1 + ", " + v2 + "] = " + peso);
-		vert_visitados.add(v1);
+		vert_visitados.add(v1); //Adiciono os vértices na lista de vértices visitados
 		vert_visitados.add(v2);
 		matriz_adjacencia[v1][v2] = -1; //marco como aresta escolhida
 		matriz_adjacencia[v2][v1] = -1; //fazer isso pq a matriz é simétrica
@@ -53,13 +57,18 @@ public class Prim {
 		//Agora que a brincadeira foi iniciada e ja temos um inicio, 
 		//Precisamos repetir o processo até que todos os vértices sejam visitados
 		int v = -1;
+		int custo_total = 0;
+		//Enquando existir vértices não visitados...
 		while(vert_visitados.size() < quant_vertices){
 			//System.out.println("\n-> Iteração sobre os vértices visitados");
 			//System.out.println("Quantidade de vértices visitados: " + vert_visitados.size());
 			//imprimeMatrizAdjacencia();
 			int p = INFINITO;
-			//Pego os vértices visitados e verifica os adjacentes não visitados de cada um
+			//Pego os vértices visitados e verifico os adjacentes não visitados de cada um
 			//Pego aquele vizinho que tem o menor peso e adiciono ele na lista de visitados
+			/* Dentre os vértices visitados, escolho o vértice que não foi visitado com quem 
+			 * ele forma a aresta de menor peso.
+			 */
 			for (int verticeVisitado : vert_visitados) {
 				v = getVerticeAdjacenteMenorPeso(verticeVisitado);
 				if(v > -1){ //Se o vértice existir...
@@ -69,22 +78,22 @@ public class Prim {
 						v1 = verticeVisitado;
 						v2 = v;
 						p = peso;
-						//System.out.println("Candidato: [" + v1 + ", " + v2 + "] = " + peso);
+						//System.out.println("Candidato: [" + v1 + ", " + v2 + "] = " + p);
 					}
 				}
-
 			}
-			matriz_adjacencia[v1][v2] = -1;
-			matriz_adjacencia[v2][v1] = -1;
-			vert_visitados.add(v2);
-			System.out.println("\nAresta escolhida: [" + v1 + ", " + v2 + "] = " + peso);
+			matriz_adjacencia[v1][v2] = -1; //marco como aresta escolhida
+			matriz_adjacencia[v2][v1] = -1; //fazer isso pq a matriz é simétrica
+			vert_visitados.add(v2); //Adiciono os vértices na lista de vértices visitados
+			custo_total += p; //Incremento o valor do custo
+			System.out.println("\nAresta escolhida: [" + v1 + ", " + v2 + "] = " + p);
 			
 			//imprimeVerticesVisitados();
 
 		}
 		
 		//System.out.println("\n\nTodos os vértices foram visitados");
-
+		System.out.println("\n=> Custo Total: " + custo_total);
 	}
 	
 	//Busca e retorna o vertice adjacente ao vertice dado com aresta de menor custo e que não tenha sido visitado ainda
@@ -106,6 +115,7 @@ public class Prim {
 		 return v;
 	}
 	
+	//Método utilizado para imprimir a matriz de adjacência atualizada (se quiser)
 	private void imprimeMatrizAdjacencia(){
 		System.out.println("\nMatriz de adjacência: ");
 		for(int m = 0; m < matriz_adjacencia.length; m++){
@@ -118,6 +128,7 @@ public class Prim {
 		System.out.print("\n");
 	}
 	
+	//Método utilizado para imprimir os vértices visitados (se quiser)
 	private void imprimeVerticesVisitados(){
 		System.out.println("\nVértices Visitados");
 		for(int i = 0; i < vert_visitados.size(); i++){
